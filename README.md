@@ -1,4 +1,16 @@
-<h1 align="center">RN-MK-Tour</h1>
+<div align="center">
+  <h1>
+    <br/>
+    <br/>
+    🚀
+    <br />
+    rn-mk-tour
+    <br />
+    <br />
+    <br />
+    <br />
+  </h1>
+</div>
 
 <p align="center">
   A flexible <strong>tourguide</strong> for your react native app!
@@ -21,7 +33,14 @@ npx expo install react-native-svg
 ```
 
 ## Usage
-```ts
+> [!TIP]
+>  We recommend reviewing the broken-down code sections below to easily grasp each feature's purpose before diving into this `Full Demo Code`.
+
+<details>
+  <summary>Full Demo Code</summary>
+  <p>
+
+```tsx
 import {
   RnmkTourProvider,
   useRnmkTourController
@@ -149,6 +168,83 @@ const styles = StyleSheet.create({
   },
 });
 ```
+  </p>
+</details>
+
+
+## Core Components Explained
+
+Let's break down the three main components of `rn-mk-tour` and their roles.
+
+- ### `RnmkTourProvider`
+
+```tsx
+<RnmkTourProvider>
+  <YourAppContent />
+</RnmkTourProvider>
+```
+
+<details>
+  <summary>Explanation</summary>
+  <p>
+The **`RnmkTourProvider`** is the **foundation** of your tour system. You wrap your entire application, or the specific section where you intend to use tours, with this component. It establishes the necessary context, enabling the `useRnmkTourController` hook and `TourZone` components to communicate and function across your component tree. Think of it as the central hub that powers all tour operations.
+  </p>
+</details>
+
+- ### `useRnmkTourController` Hook
+
+```tsx
+const { start, next, stop, TourZone } = useRnmkTourController('myUniqueTour');
+```
+
+<details>
+  <summary>Explanation</summary>
+  <p>
+The **`useRnmkTourController`** hook acts as your **command center** for a specific tour. You call it with a `tourKey` (a unique string) to receive an object containing various functions and the `TourZone` component, all designed to manage that particular tour. This empowers you to programmatically **start**, **stop**, navigate **next** or **back**, **restart**, or **skip** the tour. It also provides `canStart`, a boolean indicating when the tour is ready to begin.
+  </p>
+</details>
+
+- ### `TourZone` Component
+
+```tsx
+<TourZone step={0} content={<MyPanel onNext={next} />}>
+  <Text>This will be highlighted!</Text>
+</TourZone>
+```
+<details>
+  <summary>Explanation</summary>
+  <p>
+The TourZone component is how you define each individual step of your tour. You wrap the UI element you wish to highlight with TourZone. Within its properties, you specify the step number, which dictates its position in the overall tour sequence. Crucially, you also provide the content property, which takes your custom panel component to be displayed for that particular step. When the tour progresses to this step, TourZone automatically pinpoints the location of its children and presents the highlight effect along with your custom content panel over them.
+  </p>
+</details>
+
+
+- ### `Custom Panel` Minimal Example
+
+```tsx
+// MySimplePanel.js
+import React from 'react';
+import { View, Text, Button } from 'react-native';
+
+// `onNext` will be linked to a function like `next()` from useRnmkTourController
+const MySimplePanel = ({ onNext }) => {
+  return (
+    <View style={{ padding: 20, backgroundColor: 'white', borderRadius: 8 }}>
+      <Text style={{ fontSize: 16, marginBottom: 10 }}>This is the first step!</Text>
+      <Button title="Next" onPress={onNext} />
+    </View>
+  );
+};
+
+export default MySimplePanel;
+```
+
+<details>
+  <summary>Explanation</summary>
+  <p>
+rn-mk-Tour allows you to fully customize the content panels displayed at each step of your tour. You can create these as simple React Native components that typically receive navigation functions like onNext and onBack as props.
+  </p>
+</details>
 
 ## Interfaces & Types & Hooks
 ### Interface
@@ -156,7 +252,7 @@ const styles = StyleSheet.create({
   <summary>RnmkTourProviderProps</summary>
   <p>
 
-```ts
+```tsx
 interface RnmkTourProviderProps{
   androidStatusBarVisible?: boolean
   children: React.ReactNode
@@ -176,7 +272,7 @@ interface RnmkTourProviderProps{
   <summary>TourZoneProps</summary>
   <p>
     
-```ts
+```tsx
 interface TourZoneProps{
   zone: number // A positive number indicating the order of the step in the entire walkthrough.
   shape?: Shape // which shape
@@ -211,7 +307,7 @@ interface TourZoneProps{
   <summary>Shape</summary>
   <p>
     
-```ts
+```tsx
 type Shape = 'circle' | 'rectangle'
 ```
   </p>
@@ -226,7 +322,7 @@ type Shape = 'circle' | 'rectangle'
   <summary>useRnmkTourController</summary>
   <p>
     
-```ts
+```tsx
 const {
   canStart,         // boolean
   start,            // () => void
